@@ -7,6 +7,8 @@ import { BsDatabaseFillAdd } from "react-icons/bs"
 import { MdDashboard } from "react-icons/md"
 import ManageStudents from "../Components/ManageStudents"
 import ViewAttendance from "../Components/ViewAttendance"
+import { FcAddRow } from "react-icons/fc"
+import Home from "./Home"
 
 export default function Admin() {
     const [selectedMenu,setSelectedMenu] = useState('1');
@@ -15,7 +17,9 @@ export default function Admin() {
     const isMobile = !screens.md
     const components: any = {
         '1': <ManageStudents/>, 
-        '2':<ViewAttendance/>
+        '2':<ViewAttendance/>,
+        '3': <Home/>
+        
     }
     const items:MenuItemType[] = [
         {
@@ -27,7 +31,12 @@ export default function Admin() {
             key:'2',
             icon:<MdDashboard size={25}/>,
             label:'View Attendance'
-        }
+        },
+        {
+            key:'3',
+            icon:<FcAddRow size={25}/>,
+            label:"Mark Attendance"
+        }        
     ]
   return (
     <div className="flex h-screen flex-col overflow-hidden">

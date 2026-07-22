@@ -1,7 +1,6 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import { ToastContainer } from 'react-toastify'
 import './App.css'
-import Home from './Pages/Home'
 import Admin from './Pages/Admin'
 import AdminLogin from './Pages/AdminLogin'
 
@@ -19,8 +18,7 @@ function App() {
     <>
       <BrowserRouter>
         <Routes>
-          <Route path='/' element={<Home/>}></Route>
-          <Route path='/admin/login' element={<AdminLogin authKey={ADMIN_AUTH_KEY}/>}></Route>
+          <Route path='/' element={<AdminLogin authKey={ADMIN_AUTH_KEY}/>}></Route>
           <Route path='/admin' element={<ProtectedAdmin/>}></Route>
         </Routes>
       </BrowserRouter>
