@@ -12,5 +12,6 @@ export interface student
 export interface Attendance
 {
     date: string,
+    topic:string,
     student:student[]
 }

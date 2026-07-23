@@ -10,9 +10,19 @@ const getErrorMessage = (error: unknown) => {
 export const saveAttendance = async (attendanceData:Attendance) =>{
     try
     {
+        const topic = attendanceData.topic.trim()
+        if(!topic)
+        {
+            toast.error("Topic taught today is required")
+            return false
+        }
+
         const attendanceRef =  ref(db,`/attendance/${attendanceData.date}`)
 
-        await set(attendanceRef,attendanceData)
+        await set(attendanceRef,{
+            ...attendanceData,
+            topic
+        })
         toast.success("Attendance saved successfully")
         return true
     }
@@ -37,6 +47,7 @@ export const fetchAttendance = async () =>{
                 const attendance = value.val() as Attendance
                 records.push({
                     date: attendance.date ?? value.key ?? "",
+                    topic: attendance.topic ?? "",
                     student: Array.isArray(attendance.student) ? attendance.student : []
                 })
             })

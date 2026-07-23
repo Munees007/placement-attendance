@@ -1,13 +1,14 @@
 import { useEffect, useMemo, useState } from "react"
 import type { Attendance, student } from "../types/attendance.type"
 import { fetchStudents } from "../db/admin"
-import { Button, Empty, Modal, Select, Table, Tag } from "antd"
+import { Button, Empty, Input, Modal, Select, Table, Tag } from "antd"
 import type { ColumnsType } from "antd/es/table"
 import { saveAttendance } from "../db/general";
 
 export default function Attendance() {
     const [attendanceData,setAttendanceData] = useState<Attendance>({
         date: new Date().toDateString(),
+        topic:"",
         student:[]
     });
     const [isReviewOpen,setIsReviewOpen] = useState(false)
@@ -68,6 +69,19 @@ export default function Attendance() {
   return (
     <div className="flex h-dvh w-full flex-col items-center gap-3 overflow-hidden p-3 sm:p-4">
         <p className="shrink-0 text-lg sm:text-2xl font-bold text-center uppercase tracking-wide sm:tracking-widest">Attendance Page - {attendanceData.date}</p>
+        <div className="w-full max-w-4xl shrink-0">
+            <label className="mb-1 block text-sm font-semibold text-slate-600">
+                Topic taught today <span className="text-red-500">*</span>
+            </label>
+            <Input.TextArea
+                value={attendanceData.topic}
+                onChange={(e)=>setAttendanceData(data => ({...data,topic:e.target.value}))}
+                placeholder="Enter what was taught today"
+                autoSize={{minRows:2,maxRows:4}}
+                maxLength={240}
+                showCount
+            />
+        </div>
         <div className="flex min-h-0 w-full max-w-4xl flex-1 flex-col overflow-hidden rounded-xl shadow-lg border border-slate-200">
             <div className="min-h-0 flex-1 overflow-y-auto bg-slate-50 p-3 sm:hidden">
                 {attendanceData.student.length ? attendanceData.student.map((value, index) => (
@@ -165,7 +179,14 @@ export default function Attendance() {
                 </tbody>
             </table>
             </div>
-            <Button type="primary" onClick={()=>setIsReviewOpen(true)} className="w-full shrink-0">Save Attendance</Button>
+            <Button
+                type="primary"
+                onClick={()=>setIsReviewOpen(true)}
+                disabled={attendanceData.student.length === 0}
+                className="w-full shrink-0"
+            >
+                Save Attendance
+            </Button>
             </div>
             <Modal
                 title="Review Attendance"
@@ -174,9 +195,22 @@ export default function Attendance() {
                 onOk={handleAttendance}
                 confirmLoading={saving}
                 onCancel={()=>setIsReviewOpen(false)}
-                okButtonProps={{disabled: attendanceData.student.length === 0}}
+                okButtonProps={{disabled: attendanceData.student.length === 0 || !attendanceData.topic.trim()}}
                 width="min(720px, calc(100vw - 32px))"
             >
+                <div className="mb-4">
+                    <label className="mb-1 block text-sm font-semibold text-slate-600">
+                        Topic taught today <span className="text-red-500">*</span>
+                    </label>
+                    <Input.TextArea
+                        value={attendanceData.topic}
+                        onChange={(e)=>setAttendanceData(data => ({...data,topic:e.target.value}))}
+                        placeholder="Enter what was taught today"
+                        autoSize={{minRows:2,maxRows:4}}
+                        maxLength={240}
+                        showCount
+                    />
+                </div>
                 <div className="flex flex-col gap-3 mb-4 sm:flex-row">
                     <div className="border border-slate-200 rounded-md px-4 py-3 flex-1">
                         <p className="text-sm text-slate-500">Absents</p>
